@@ -1,0 +1,29 @@
+{
+    "name": "cytracom/squasher",
+    "description": "Aggregate your incremental Laravel migration files into single migration for each table. This eliminates all alter columns and makes testing via sqlite a possibility.",
+    "keywords": ["framework", "laravel", "migrations", "migrate", "migration", "squash", "sqlite", "testing"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jacob Barber",
+            "email": "open-source@cytracom.com"
+        }
+    ],
+    "require": {
+        "illuminate/console": "4.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Cytracom\\Squasher": "src/"
+        },
+        "classmap": [
+            "src",
+            "src/database",
+            "src/commands"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "dev"
+}
