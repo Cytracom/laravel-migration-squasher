@@ -23,7 +23,6 @@ class SquashMigrations extends Command {
 	/**
 	 * Create a new command instance.
 	 *
-	 * @return void
 	 */
 	public function __construct()
 	{
@@ -33,23 +32,10 @@ class SquashMigrations extends Command {
 	/**
 	 * Execute the console command.
 	 *
-	 * @return void
 	 */
 	public function fire()
 	{
         (new Cytracom\Squasher\MigrationSquasher($this->argument('path')))->squash($this->argument('output'));
-	}
-
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return array(
-			array('', InputArgument::REQUIRED, 'An example argument.'),
-		);
 	}
 
 	/**
