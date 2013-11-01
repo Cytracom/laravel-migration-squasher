@@ -1,5 +1,7 @@
 <?php
 
+namespace Cytracom\Squasher\Command;
+
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -18,7 +20,7 @@ class SquashMigrations extends Command
      *
      * @var string
      */
-    protected $description = 'Command description.';
+    protected $description = 'Aggregates all migrations, and turns them into one migration per table.';
 
     /**
      * Create a new command instance.
