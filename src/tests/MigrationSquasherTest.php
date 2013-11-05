@@ -17,7 +17,7 @@ class MigrationSquasherTest extends \PHPUnit_Framework_TestCase
     public function __construct()
     {
         require_once __DIR__ . '/../MigrationSquasher.php';
-        require_once __DIR__ . '/../../bootstrap/autoload.php';
+        require_once __DIR__ . '/../../vendor/autoload.php';
         parent::__construct();
     }
 
