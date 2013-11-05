@@ -57,4 +57,4 @@ foreach($myStringColumns as $column){
 ```
 And I don't think it ever will.  I do not believe migrations were intended to work that way, and it's a pain to parse anyway.
 
-
+Again, please raise an issue if you find one, and feel free to make pull requests for review!  Our goal is to make testing with sqlite much more of a possibility, to enable fast testing.  Help from the community is always appreciated.
