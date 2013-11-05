@@ -57,11 +57,11 @@ class MigrationSquasher
      * @param $outputMigrations
      * @param $moveToPath
      */
-    public function __construct($pathToMigrations, $outputMigrations, $moveToPath)
+    public function __construct($pathToMigrations, $outputMigrations, $moveToPath = null)
     {
-        $this->migrationPath = trim(($pathToMigrations), '/').'/';
+        $this->migrationPath = trim(($pathToMigrations), '/') . '/';
         $this->outputPath = $this->setupFolder($outputMigrations);
-        $this->moveToPath = $this->setupFolder($moveToPath);
+        $this->moveToPath = $moveToPath == null ? null : $this->setupFolder($moveToPath);
         $this->migrations = scandir($this->migrationPath);
         $this->tables = [];
     }
@@ -98,7 +98,7 @@ class MigrationSquasher
         foreach ($this->migrations as $migration) {
             if (!is_dir($migration)) {
                 echo "Parsing migration $migration\n";
-                if ($this->parseFile($migration)) {
+                if ($this->parseFile($migration) && $this->moveToPath !== null) {
                     rename($this->migrationPath . $migration, base_path($this->moveToPath . $migration));
                 }
             }
@@ -211,13 +211,21 @@ class MigrationSquasher
                 $table->addRelationship(new Relationship($segments[1], $segments[3], $segments[5]));
                 break;
             case 'dropColumn':
+            case 'dropIfExists' :
                 $table->dropColumn($segments[1]);
                 break;
             case 'dropForeign':
                 $table->dropRelationship($segments[1]);
                 break;
+            case 'dropSoftDeletes' :
+                $table->dropColumn('softDeletes');
+                break;
+            case 'dropTimestamps' :
+                $table->dropColumn('timestamps');
+                break;
             case 'timestamps' :
             case 'softDeletes' :
+            case 'nullableTimestamps' :
                 $segments[1] = $matches[0];
             case 'string' :
             case 'integer' :
@@ -236,9 +244,17 @@ class MigrationSquasher
             case 'text' :
             case 'binary' :
             case 'default' :
+            case 'morphs' :
+            case 'mediumText' :
+            case 'longText' :
+            case 'mediumInteger' :
+            case 'tinyInteger' :
+            case 'unsignedBigInteger' :
+            case 'unsignedInteger' :
                 $table->addColumn($this->createStandardColumn($matches, $segments));
                 break;
         }
+        $matches = null;
     }
 
     /**
@@ -251,8 +267,10 @@ class MigrationSquasher
     protected function createStandardColumn($matches, $segments)
     {
         $col = new Column($matches[0], isset($segments[1]) ? $segments[1] : null);
-        foreach ($matches as $match) {
-
+        foreach ($matches as $key => $match) {
+            if ($key === 0) {
+                continue;
+            }
             if (str_contains($match, 'unsigned')) {
                 $col->unsigned = true;
             }
@@ -262,14 +280,12 @@ class MigrationSquasher
             elseif (str_contains($match, 'nullable')) {
                 $col->nullable = true;
             }
-
         }
         if (isset($segments[2])) {
             $col->size =
-                preg_match('/,( *)\d*/', $segments[2], $lineSize) ?
-                    (int) preg_replace('/[^\d]*/', '', $lineSize[0]) :
+                preg_match('/,( *)[\dtrue]*/', $segments[2], $lineSize) ?
+                    preg_replace('/[^\dtrue]*/', '', $lineSize[0]) :
                     null;
-            echo json_encode($lineSize) . "\n";
         }
         return $col;
     }
@@ -298,7 +314,7 @@ class MigrationSquasher
     {
         $folder = trim($folder, '/');
         if (!is_dir($folder)) {
-            echo "Creating output folder $folder";
+            echo "Creating output folder $folder\n";
             mkdir($folder, 0777, true);
         }
         $folder .= '/';

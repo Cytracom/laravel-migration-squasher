@@ -135,7 +135,7 @@ class TableBuilder
     protected function appendColumnSize($column)
     {
         if ($column->size !== null) {
-            return ", " . (int) $column->size;
+            return ", " . $column->size;
         }
         return '';
     }
@@ -176,7 +176,7 @@ class TableBuilder
      */
     protected function appendColumnUnique($column)
     {
-        if ($column->unsigned) {
+        if ($column->unique) {
             return "->unique()";
         }
         return '';
