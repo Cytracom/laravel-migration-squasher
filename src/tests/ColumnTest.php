@@ -14,7 +14,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
 
     public function testInstantiateColumn()
     {
-        require '..\database\Column.php';
+        require __DIR__ .'/../database/Column.php';
 
         $col = new \Cytracom\Squasher\Database\Column('string', 'test', true, 10, false, false);
         $this->assertEquals('string', $col->type);
