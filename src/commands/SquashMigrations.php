@@ -1,5 +1,7 @@
 <?php
+namespace Cytracom\Squasher\Command;
 
+use Cytracom\Squasher\MigrationSquasher;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -35,7 +37,7 @@ class SquashMigrations extends Command
      */
     public function fire()
     {
-        (new Cytracom\Squasher\MigrationSquasher($this->option('path'), $this->option('output'), $this->option('move-to')))->squash();
+        (new MigrationSquasher($this->option('path'), $this->option('output'), $this->option('move-to')))->squash();
     }
 
     /**

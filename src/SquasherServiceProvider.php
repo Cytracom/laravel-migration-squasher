@@ -9,6 +9,7 @@
 namespace Cytracom\Squasher;
 
 use Illuminate\Support\ServiceProvider;
+use Cytracom\Squasher\Command\SquashMigrations;
 
 class SquasherServiceProvider extends ServiceProvider{
 
@@ -42,7 +43,7 @@ class SquasherServiceProvider extends ServiceProvider{
     {
         $this->app['migrate:squash'] = $this->app->share(function($app)
         {
-            return new \Cytracom\Squasher\Command\SquashMigrations();
+            return new SquashMigrations();
         });
     }
 }
