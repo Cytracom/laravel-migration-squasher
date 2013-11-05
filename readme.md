@@ -2,7 +2,6 @@ Aggregate your incremental Laravel migration files into single migration for eac
 
 [![Build Status](https://travis-ci.org/Cytracom/laravel-migration-squasher.png)](https://travis-ci.org/Cytracom/laravel-migration-squasher)
 
-
 To install simply require 
 ```
 "cytracom/squasher": "dev-master"
@@ -34,6 +33,7 @@ The squasher does not currently support composite keys, enumerations, or indexes
 Keep in mind that the squasher was made for testing, not for incrememtal database changes.  Using the squasher will drop any non-table related functionality in your code.
 
 The table squasher can handle simple migration statements, written in a normal, not insane way. Like this:
+
 ```php
 Schema::create('my_table', function (Blueprint $table) {
     $table->integer("my_int",10)->unsigned()->unique();
@@ -42,6 +42,7 @@ Schema::create('my_table', function (Blueprint $table) {
     //etc;
 });
 ```
+This also works for dropping and modifying schemas.
 
 The table squasher will NOT hanlde things like
 ```php
