@@ -1,7 +1,5 @@
 <?php
 
-namespace Cytracom\Squasher\Command;
-
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -20,11 +18,10 @@ class SquashMigrations extends Command
      *
      * @var string
      */
-    protected $description = 'Aggregates all migrations, and turns them into one migration per table.';
+    protected $description = 'Aggregates all of your migrations into one migration per table.';
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -34,10 +31,21 @@ class SquashMigrations extends Command
     /**
      * Execute the console command.
      *
+     * @return void
      */
     public function fire()
     {
-        (new Cytracom\Squasher\MigrationSquasher($this->argument('path')))->squash($this->argument('output'));
+        (new Cytracom\Squasher\MigrationSquasher($this->option('path'), $this->option('output'), $this->option('move-to')))->squash();
+    }
+
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return array();
     }
 
     /**
@@ -48,10 +56,12 @@ class SquashMigrations extends Command
     protected function getOptions()
     {
         return array(
-            array('path', null, InputOption::VALUE_OPTIONAL, 'The path to the migrations folder',
-                app_path() . '/database/migrations'),
-            array('output', null, InputOption::VALUE_OPTIONAL, 'The path to the output folder of squashes',
-                app_path() . '/database/migrations')
+            array('path', 'p', InputOption::VALUE_OPTIONAL, 'The path to the migrations folder',
+                'app/database/migrations'),
+            array('output', 'o', InputOption::VALUE_OPTIONAL, 'The path to the output folder of squashes',
+                'app/tests/migrations'),
+            array('move-to', 'mv', InputOption::VALUE_OPTIONAL, 'The path where old migrations will be moved.',
+                'app/database/migrations')
         );
     }
 
