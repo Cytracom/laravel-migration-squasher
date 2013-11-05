@@ -6,11 +6,11 @@ To install simply require
 ```
 "cytracom/squasher": "dev-master"
 ```
-
 Then, add the service provider to your app/config/app.php
 ```
 'Cytracom\Squasher\SquasherServiceProvider'
 ```
+
 
 Commandline usage:
 ```
@@ -22,15 +22,19 @@ Options:
  --move-to (-mv)       The path where old migrations will be moved. (default: "app/database/migrations")      
 ```
 
+
 Usage in php: 
 ```php
 $squasher = new \Cytracom\Squasher\MigrationSquasher($pathToMigrations, $outputForSquashedMigrations [, $moveOldToThisPath = null]);
 $squasher->squash();
 ```
 
+
 The squasher does not currently support composite keys, enumerations, or indexes.  If you find anything else I missed, please raise an issue! Or, even better, attempt to integrate it!
 
-Keep in mind that the squasher was made for testing, not for incrememtal database changes.  Using the squasher will drop any non-table related functionality in your code.
+The migration squasher will take several migrations and create a single, final migration that reflects what the database schema should be after all migrations have run.
+
+Keep in mind that the squasher was made for testing, not for incrememtal database changes.  Using the squasher will drop any non-migration related functionality in your code.  The goal is to get rid of all alter columns, to enable sqlite testing.
 
 The table squasher can handle simple migration statements, written in a normal, not insane way. Like this:
 
