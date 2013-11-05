@@ -15,6 +15,7 @@ class Table
     protected $columns;
     protected $engine;
     protected $relationships;
+    protected $primary = null;
 
     public function __construct($tableName, $engine = "InnoDB")
     {
@@ -49,7 +50,7 @@ class Table
 
     public function getColumn($columnName)
     {
-        return $columnName;
+        return $this->columns[$columnName];
     }
 
     public function hasColumn($columnName)
@@ -85,5 +86,15 @@ class Table
     public function getRelationships()
     {
         return $this->relationships;
+    }
+
+    public function setPrimaryKey($columnName)
+    {
+        $this->primary = $columnName;
+    }
+
+    public function getPrimaryKey()
+    {
+        return $this->primary;
     }
 } 

@@ -8,7 +8,7 @@
 
 namespace Cytracom\Squasher;
 
-use Squasher\Database\Table;
+use Cytracom\Squasher\Database\Table;
 
 class TableBuilder
 {
@@ -38,7 +38,10 @@ class TableBuilder
     public function fillInTableData()
     {
         $this->createColumns();
+        $this->createPrimaryKey();
         $this->createRelationships();
+        $this->content .= "            \$table->engine = '" . $this->table->getEngine() . "';\n";
+
     }
 
     protected function createColumns()
@@ -46,7 +49,7 @@ class TableBuilder
         $doLater = [];
         foreach ($this->table->getColumns() as $column) {
             //if it is a generic column such as timestamps, soft deletes, etc; put at the end of the column list.
-            if ($column->name === '') {
+            if ($column->name === '' || $column->name === null || $column->name === $column->type) {
                 array_push($doLater, $column);
             }
             else {
@@ -55,7 +58,15 @@ class TableBuilder
         }
 
         foreach ($doLater as $column) {
+            $column->name = null;
             $this->content .= $this->createColumn($column);
+        }
+    }
+
+    protected function createPrimaryKey()
+    {
+        if ($this->table->getPrimaryKey() !== null) {
+            $this->content .= "            \$table->primary('" . $this->table->getPrimaryKey() . "');\n";
         }
     }
 
@@ -73,8 +84,10 @@ class TableBuilder
 
         $line .= $this->appendColumnName($column);
         $line .= $this->appendColumnSize($column) . ')';
-        $line .= $this->appendColumnSign($column, $line) . ";\n";
+        $line .= $this->appendColumnSign($column);
+        $line .= $this->appendColumnUnique($column);
 
+        $line .= ";\n";
         return $line;
     }
 
@@ -115,13 +128,24 @@ class TableBuilder
     }
 
     /**
+     * @param $column
+     * @return string
+     */
+    protected function appendColumnUnique($column)
+    {
+        if ($column->unsigned) {
+            return "->unique()";
+        }
+        return '';
+    }
+
+    /**
      * Creates the base template for a migration file.
      *
      * @return string
      */
     public function init()
     {
-        self::$built++;
         return
             "<?php\n" .
             "\n" .
