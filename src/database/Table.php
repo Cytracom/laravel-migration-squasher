@@ -61,7 +61,7 @@ class Table
         $this->name = $tableName;
         $this->columns = [];
         $this->relationships = [];
-        $this->engine = "InnoDB";
+        $this->engine = $engine;
     }
 
     /**
@@ -189,6 +189,17 @@ class Table
     public function getRelationships()
     {
         return $this->relationships;
+    }
+
+    /**
+     * Retrieve the relationship object with the given foreign key.
+     *
+     * @param $relName
+     * @return Relationship
+     */
+    public function getRelationship($relName)
+    {
+        return $this->relationships[$relName];
     }
 
     /**
