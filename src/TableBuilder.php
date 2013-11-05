@@ -13,19 +13,36 @@ use Cytracom\Squasher\Database\Table;
 class TableBuilder
 {
 
-    public static $built = 0;
-
     /**
+     * The table to build a migration for.
+     *
      * @var Table
      */
     protected $table;
+
+    /**
+     * The string in the table.
+     *
+     * @var string
+     */
     public $content;
 
+    /**
+     * Create a new builder for the given table.
+     *
+     * @param Table $table
+     */
     protected function __construct(Table $table)
     {
         $this->table = $table;
     }
 
+    /**
+     * Build a migration file using a given table.
+     *
+     * @param Table $table
+     * @return mixed
+     */
     public static function build(Table $table)
     {
         $squasher = new self($table);
@@ -35,6 +52,9 @@ class TableBuilder
         return str_replace("\n", PHP_EOL, $squasher->content);
     }
 
+    /**
+     * Fill out the table data.
+     */
     public function fillInTableData()
     {
         $this->createColumns();
@@ -44,6 +64,9 @@ class TableBuilder
 
     }
 
+    /**
+     * Create all of the column for the given table, and put nameless columns last (timestamps, softDeletes).
+     */
     protected function createColumns()
     {
         $doLater = [];
@@ -63,6 +86,9 @@ class TableBuilder
         }
     }
 
+    /**
+     * Set the primary key if this tables PK is specified.
+     */
     protected function createPrimaryKey()
     {
         if ($this->table->getPrimaryKey() !== null) {
@@ -70,6 +96,9 @@ class TableBuilder
         }
     }
 
+    /**
+     * Create all of the tables relationships.
+     */
     protected function createRelationships()
     {
         foreach ($this->table->getRelationships() as $relationship) {
@@ -78,6 +107,12 @@ class TableBuilder
         }
     }
 
+    /**
+     * Create the given column and apply it's attributes.
+     *
+     * @param $column
+     * @return string
+     */
     public function createColumn($column)
     {
         $line = "            \$table->$column->type(";
@@ -92,6 +127,8 @@ class TableBuilder
     }
 
     /**
+     * Add the column size if specified.
+     *
      * @param $column
      * @return string
      */
@@ -104,6 +141,8 @@ class TableBuilder
     }
 
     /**
+     * Add the column name if specified.
+     *
      * @param $column
      * @return string
      */
@@ -116,6 +155,8 @@ class TableBuilder
     }
 
     /**
+     * Add the column sign if specified.
+     *
      * @param $column
      * @return string
      */
@@ -128,6 +169,8 @@ class TableBuilder
     }
 
     /**
+     * Mark if the column is unique or not.
+     *
      * @param $column
      * @return string
      */
@@ -165,6 +208,11 @@ class TableBuilder
             "       Schema::create(\"{$this->table->name}\", function (Blueprint \$table) {\n";
     }
 
+    /**
+     * Closes out the migration file.
+     *
+     * @return string
+     */
     public function close()
     {
         return "       });\n    }\n}";

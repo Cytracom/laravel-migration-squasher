@@ -15,14 +15,48 @@ use Cytracom\Squasher\Database\Table;
 class MigrationSquasher
 {
 
+    /**
+     * The path to unsquashed migrations.
+     *
+     * @var string
+     */
     protected $migrationPath;
+
+    /**
+     * The path to the generated migrations.
+     *
+     * @var string
+     */
     protected $outputPath;
+
+    /**
+     * The path to move old migrations to.
+     *
+     * @var string
+     */
     protected $moveToPath;
 
-
+    /**
+     * An array of strings containing the paths to each migration.
+     *
+     * @var array
+     */
     protected $migrations;
+
+    /**
+     * An array of table objects.
+     *
+     * @var array
+     */
     protected $tables;
 
+    /**
+     * Preps a new migration squasher.
+     *
+     * @param $pathToMigrations
+     * @param $outputMigrations
+     * @param $moveToPath
+     */
     public function __construct($pathToMigrations, $outputMigrations, $moveToPath)
     {
         $this->migrationPath = trim(($pathToMigrations), '/').'/';
@@ -32,6 +66,9 @@ class MigrationSquasher
         $this->tables = [];
     }
 
+    /**
+     * Begin squashing all migrations in the migration path.
+     */
     public function squash()
     {
         echo "Beginning migration squash\n";
@@ -53,6 +90,9 @@ class MigrationSquasher
         echo "New migrations are located in $this->outputPath\n";
     }
 
+    /**
+     * Begin parsing each file.
+     */
     protected function parseMigrations()
     {
         foreach ($this->migrations as $migration) {
@@ -65,6 +105,12 @@ class MigrationSquasher
         }
     }
 
+    /**
+     * Parse the given file.
+     *
+     * @param $filePath
+     * @return bool true/false if the file was a migration
+     */
     protected function parseFile($filePath)
     {
         $fileLines = explode(PHP_EOL, file_get_contents($this->migrationPath . $filePath));
@@ -72,8 +118,10 @@ class MigrationSquasher
     }
 
     /**
+     * Parse each string from the given array of strings
+     *
      * @param $fileLines
-     * @return bool
+     * @return bool true/false if the file was a migration
      */
     protected function parseLines($fileLines)
     {
@@ -100,6 +148,8 @@ class MigrationSquasher
     }
 
     /**
+     * Pull the table out of the given regex matches.
+     *
      * @param $matches
      * @return null|Table
      */
@@ -118,6 +168,8 @@ class MigrationSquasher
     }
 
     /**
+     * Parse the given line and set the values in the given table.
+     *
      * @param Table $table
      * @param $line
      */
@@ -134,6 +186,8 @@ class MigrationSquasher
 
 
     /**
+     * Create the function call based on the column on the line.
+     *
      * @param Table $table
      * @param $line
      * @param $matches
@@ -188,6 +242,8 @@ class MigrationSquasher
     }
 
     /**
+     * A generic function for creating a plain old column.
+     *
      * @param $matches
      * @param $segments
      * @return \Cytracom\Squasher\Database\Column
@@ -219,6 +275,8 @@ class MigrationSquasher
     }
 
     /**
+     * Return an array of function calls on the given line, or false if there are none.
+     *
      * @param $line
      * @return array|bool
      */
@@ -231,6 +289,8 @@ class MigrationSquasher
     }
 
     /**
+     * Create the given folder recursively, and return the correctly formatted folder path.
+     *
      * @param $folder
      * @return string
      */
@@ -245,6 +305,11 @@ class MigrationSquasher
         return $folder;
     }
 
+    /**
+     * Return an array that is the correct order that tables should be created.
+     *
+     * @return array
+     */
     protected function resolveTableDependencies()
     {
         echo "Resolving foreign key relationships...\n";
