@@ -10,7 +10,11 @@
         }
     ],
     "require": {
-        "laravel/framework": "4.0.*"
+        "illuminate/console": "4.0.*"
+    },
+    "require-dev": {
+        "laravel/framework": "4.0.*",
+        "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
         "psr-0": {
