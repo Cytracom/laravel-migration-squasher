@@ -47,9 +47,9 @@ class UnsquashedTestSquash extends Migration
             $table->dropColumn("to_be_dropped");
 
             DB::update('ALTER TABLE `test` MODIFY COLUMN `longText` int(11);');
-            DB::update('ALTER TABLE `test` MODIFY COLUMN `bin` BLOB(5000);');
-            DB::update('ALTER TABLE `test` MODIFY COLUMN `doub` double(11,12);');
-            DB::update('ALTER TABLE `test` MODIFY COLUMN `bigInc` bigint(11)  AUTO_INCREMENT;');
+            DB::update('ALTER TABLE test MODIFY COLUMN `bin` BLOB(5000);');
+            DB::update('ALTER TABLE `test` MODIFY COLUMN doub double(11,12);');
+            DB::update('ALTER TABLE test MODIFY COLUMN bigInc bigint(11)  AUTO_INCREMENT;');
             DB::update('ALTER TABLE `test` MODIFY COLUMN `test` string(255);');
             DB::update('ALTER TABLE `test` MODIFY COLUMN `dte` datetime NULL AUTO_INCREMENT;');
         });
