@@ -60,7 +60,7 @@ class TableBuilder
         $this->createColumns();
         $this->createPrimaryKey();
         $this->createRelationships();
-        $this->content .= "            \$table->engine = '" . $this->table->getEngine() . "';\n";
+        $this->content .= "            \$table->engine = " . $this->table->getEngine() . ";\n";
 
     }
 
@@ -118,10 +118,11 @@ class TableBuilder
         $line = "            \$table->$column->type(";
 
         $line .= $this->appendColumnName($column);
-        $line .= $this->appendColumnSize($column) . ')';
+        $line .= $this->appendColumnParameters($column) . ')';
         $line .= $this->appendColumnSign($column);
         $line .= $this->appendColumnUnique($column);
-
+        $line .= $this->appendColumnNullability($column);
+        $line .= $this->appendColumnDefault($column);
         $line .= ";\n";
         return $line;
     }
@@ -132,10 +133,10 @@ class TableBuilder
      * @param $column
      * @return string
      */
-    protected function appendColumnSize($column)
+    protected function appendColumnParameters($column)
     {
-        if ($column->size !== null) {
-            return ", " . $column->size;
+        if ($column->parameters !== null) {
+            return ", " . $column->parameters;
         }
         return '';
     }
@@ -178,6 +179,34 @@ class TableBuilder
     {
         if ($column->unique) {
             return "->unique()";
+        }
+        return '';
+    }
+
+    /**
+     * Mark if the column is nullable.
+     *
+     * @param $column
+     * @return string
+     */
+    protected function appendColumnNullability($column)
+    {
+        if ($column->nullable) {
+            return "->nullable()";
+        }
+        return '';
+    }
+
+    /**
+     * Mark if the column is nullable.
+     *
+     * @param $column
+     * @return string
+     */
+    protected function appendColumnDefault($column)
+    {
+        if ($column->default !== null) {
+            return "->default($column->default)";
         }
         return '';
     }

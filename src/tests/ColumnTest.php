@@ -20,7 +20,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('string', $col->type);
         $this->assertEquals('test', $col->name);
         $this->assertTrue($col->unsigned);
-        $this->assertEquals(10, $col->size);
+        $this->assertEquals(10, $col->parameters);
         $this->assertFalse($col->nullable);
         $this->assertFalse($col->unique);
     }

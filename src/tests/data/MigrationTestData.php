@@ -30,7 +30,7 @@ class UnsquashedTestSquash extends Migration
             $table->softDeletes();
             $table->dropSoftDeletes();
             $table->softDeletes();
-            $table->boolean("bool");
+            $table->boolean("bool")->default(true);
             $table->date("dte");
             $table->double("doub");
             $table->decimal("deci");
@@ -43,8 +43,15 @@ class UnsquashedTestSquash extends Migration
             $table->text('txt');
             $table->mediumText('medtext');
             $table->mediumInteger('medint');
-            $table->longText('longtext');
+            $table->longText('longText');
             $table->dropColumn("to_be_dropped");
+
+            DB::update('ALTER TABLE `test` MODIFY COLUMN `longText` int(11);');
+            DB::update('ALTER TABLE `test` MODIFY COLUMN `bin` BLOB(5000);');
+            DB::update('ALTER TABLE `test` MODIFY COLUMN `doub` double(11,12);');
+            DB::update('ALTER TABLE `test` MODIFY COLUMN `bigInc` bigint(11)  AUTO_INCREMENT;');
+            DB::update('ALTER TABLE `test` MODIFY COLUMN `test` string(255);');
+            DB::update('ALTER TABLE `test` MODIFY COLUMN `dte` datetime NULL AUTO_INCREMENT;');
         });
     }
 }

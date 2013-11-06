@@ -41,7 +41,7 @@ class Column
      *
      * @var null|string|int
      */
-    public $size;
+    public $parameters;
 
     /**
      * Are the rows in this column unique?
@@ -58,6 +58,11 @@ class Column
     public $nullable;
 
     /**
+     * The default value for this column.
+     */
+    public $default;
+
+    /**
      * Creates a new column with the given parameters.
      *
      * @param $type
@@ -66,14 +71,16 @@ class Column
      * @param null $size
      * @param bool $nullable
      * @param bool $unique
+     * @param null|mixed $default
      */
-    public function __construct($type, $name = null, $unsigned = false, $size = null, $nullable = false, $unique = false)
+    public function __construct($type, $name = null, $unsigned = false, $size = null, $nullable = false, $unique = false, $default = null)
     {
         $this->name = $name;
         $this->type = $type;
         $this->unsigned = $unsigned;
-        $this->size = $size;
+        $this->parameters = $size;
         $this->unique = $unique;
         $this->nullable = $nullable;
+        $this->default = $default;
     }
 }

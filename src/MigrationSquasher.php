@@ -135,8 +135,15 @@ class MigrationSquasher
             if (str_contains($line, "}")) {
                 $table = null;
             }
+            if ($this->lineContainsDbStatement($line) &&
+                preg_match_all('/ALTER TABLE *`?([^`]*)`? *.* *COLUMN *`?([^` ]*)`? *([^(]*)\(?([^)]*)?\)? *?([^\'";]*)?/i',
+                    preg_replace('/datetime/i','datetime()',$line),
+                    $matches)
+            ) {
+                $this->createColumnFromDbStatement($matches);
 
-            if (preg_match('/Schema::(d|c|t|[^(]*\((\'|")(.*)(\'|"))*/', $line, $matches)) {
+            }
+            elseif (preg_match('/Schema::(d|c|t|[^(]*\((\'|")(.*)(\'|"))*/', $line, $matches)) {
                 $table = $this->parseTable($matches);
                 $migration = true;
             }
@@ -243,7 +250,6 @@ class MigrationSquasher
             case 'timestamp' :
             case 'text' :
             case 'binary' :
-            case 'default' :
             case 'morphs' :
             case 'mediumText' :
             case 'longText' :
@@ -251,7 +257,7 @@ class MigrationSquasher
             case 'tinyInteger' :
             case 'unsignedBigInteger' :
             case 'unsignedInteger' :
-                $table->addColumn($this->createStandardColumn($matches, $segments));
+                $table->addColumn($this->createStandardColumn($matches, $segments, $line));
                 break;
         }
         $matches = null;
@@ -264,7 +270,7 @@ class MigrationSquasher
      * @param $segments
      * @return \Cytracom\Squasher\Database\Column
      */
-    protected function createStandardColumn($matches, $segments)
+    protected function createStandardColumn($matches, $segments, $line)
     {
         $col = new Column($matches[0], isset($segments[1]) ? $segments[1] : null);
         foreach ($matches as $key => $match) {
@@ -280,9 +286,13 @@ class MigrationSquasher
             elseif (str_contains($match, 'nullable')) {
                 $col->nullable = true;
             }
+            elseif (str_contains($match, 'default')) {
+                preg_match_all('/default\(([^)]*)/', $line, $default);
+                $col->default = $default[1][0];
+            }
         }
         if (isset($segments[2])) {
-            $col->size =
+            $col->parameters =
                 preg_match('/,( *)[\dtrue]*/', $segments[2], $lineSize) ?
                     preg_replace('/[^\dtrue]*/', '', $lineSize[0]) :
                     null;
@@ -302,6 +312,17 @@ class MigrationSquasher
             return $match;
         }
         return false;
+    }
+
+    /**
+     * Return an array of function calls on the given line, or false if there are none.
+     *
+     * @param $line
+     * @return array|bool
+     */
+    protected function lineContainsDbStatement($line)
+    {
+        return str_contains($line, "::update");
     }
 
     /**
@@ -353,6 +374,69 @@ class MigrationSquasher
         }
         echo "Done!\n";
         return $sortedTables;
+    }
+
+    /**
+     * @param $matches
+     * @return mixed
+     */
+    protected function createColumnFromDbStatement($matches)
+    {
+        $table = $matches[1][0];
+        $column = $matches[2][0];
+        $type = $this->convertMySqlTypeToLaravelType(strtolower($matches[3][0]));
+        $params = $matches[4][0];
+
+        $attributes = strtolower($matches[5][0]);
+
+        if ($this->tables[$table]->hasColumn($column)) {
+            if (str_contains($attributes, 'auto_increment')) {
+                if ($type === "bigInteger") {
+                    $type = "bigIncrements";
+                }
+                elseif ($type === "integer") {
+                    $type = "increments";
+                }
+            }
+
+            $col = new Column($type, $column);
+            $col->nullable = str_contains($attributes, "not null") ? false : true;
+
+            switch ($type) {
+                case 'string' :
+                    $col->parameters = $params;
+                    break;
+                case 'double' :
+                case 'decimal' :
+                    $col->parameters = $params;
+            }
+
+            $this->tables[$table]->addColumn($col);
+        }else{
+            echo "\n======================================================================\nWARNING: You have a mysql query modifying a non-existent column.\n$column\n======================================================================\n";
+        }
+
+    }
+
+    protected function convertMySqlTypeToLaravelType($type)
+    {
+        switch ($type) {
+            case 'char' :
+            case 'varchar' :
+                return 'string';
+            case 'bigint' :
+            case 'biginteger':
+                return 'bigInteger';
+            case 'int':
+                return 'integer';
+            case 'smallint' :
+            case 'smallinteger' :
+                return 'smallInteger';
+            case 'blob' :
+                return 'binary';
+
+        }
+        return $type;
     }
 }
 
