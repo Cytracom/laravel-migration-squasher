@@ -48,7 +48,7 @@ Schema::create('my_table', function (Blueprint $table) {
     //etc;
 });
 ```
-This also works for dropping and modifying schemas.
+This also works for dropping and modifying schemas.  For a more detailed view on what it can handle, look at the sample test data in src/tests/data/MigrationTestData.php
 
 The table squasher will NOT hanlde things like
 ```php
