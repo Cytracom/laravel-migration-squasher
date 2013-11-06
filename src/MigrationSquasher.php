@@ -136,7 +136,7 @@ class MigrationSquasher
                 $table = null;
             }
             if ($this->lineContainsDbStatement($line) &&
-                preg_match_all('/ALTER TABLE *`?([^`]*)`? *.* *COLUMN *`?([^` ]*)`? *([^(]*)\(?([^)]*)?\)? *?([^\'";]*)?/i',
+                preg_match_all('/ALTER TABLE *`?([^ `]*)`? *.* *COLUMN *`?([^` ]*)`? *([^(]*)\(?([^)]*)?\)? *?([^\'";]*)?/i',
                     preg_replace('/datetime/i','datetime()',$line),
                     $matches)
             ) {
