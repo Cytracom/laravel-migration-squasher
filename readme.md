@@ -43,6 +43,8 @@ Schema::create('my_table', function (Blueprint $table) {
     $table->integer("my_int",10)->unsigned()->unique();
     $table->increments("id");
     $table->string("test",255);
+
+    DB::update('ALTER TABLE `my_table` MODIFY COLUMN `test` blob(500);');
     //etc;
 });
 ```
