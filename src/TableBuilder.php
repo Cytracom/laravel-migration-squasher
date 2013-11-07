@@ -60,7 +60,7 @@ class TableBuilder
         $this->createColumns();
         $this->createPrimaryKey();
         $this->createRelationships();
-        $this->content .= "            \$table->engine = " . $this->table->getEngine() . ";\n";
+        $this->content .= "            \$table->engine = '" . $this->table->getEngine() . "';\n";
 
     }
 

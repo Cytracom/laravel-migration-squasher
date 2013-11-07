@@ -128,7 +128,7 @@ class MigrationSquasher
         $table = null;
         $migration = false;
         foreach ($fileLines as $line) {
-            if (preg_match('/public function down\(\)/', $line)) {
+            if (preg_match('/public function down\(.*\)/', $line)) {
                 break;
             }
 
