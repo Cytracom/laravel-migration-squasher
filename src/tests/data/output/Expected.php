@@ -36,7 +36,7 @@ class SquashedTestTable extends Migration
             $table->integer('longText')->nullable();
             $table->nullableTimestamps();
             $table->softDeletes();
-            $table->engine = "TestEngine";
+            $table->engine = 'TestEngine';
         });
     }
 }

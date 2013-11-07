@@ -181,7 +181,7 @@ class MigrationSquasher
     protected function parseField(Table $table, $line)
     {
         if (preg_match('/\$[^->]*->engine/', $line)) {
-            $table->setEngine(preg_replace("/(('*)|(;*)|( *))*/", "", explode("=", $line)[1]));
+            $table->setEngine(preg_replace("/'|;| |\"/", "", explode("=", $line)[1]));
             return;
         }
         elseif ($matches = $this->lineContainsFunctionCall($line)) {
