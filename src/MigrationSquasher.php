@@ -136,12 +136,11 @@ class MigrationSquasher
                 $table = null;
             }
             if ($this->lineContainsDbStatement($line) &&
-                preg_match_all('/ALTER TABLE *`?([^ `]*)`? *.* *COLUMN *`?([^` ]*)`? *([^(]*)\(?([^)]*)?\)? *?([^\'";]*)?/i',
-                    preg_replace('/datetime/i','datetime()',$line),
-                    $matches)
+                preg_match_all('/ALTER TABLE *`?([^` ]*)`? *(?>MODIFY|CHANGE) *COLUMN `?([^ `]*)`? *([^;( ]*)(\(([^)]*))?\)? *([^\';]*)/i',
+                    $line, $matches)
             ) {
+                echo "\n\n".json_encode($matches)."\n\n";
                 $this->createColumnFromDbStatement($matches);
-
             }
             elseif (preg_match('/Schema::(d|c|t|[^(]*\((\'|")(.*)(\'|"))*/', $line, $matches)) {
                 $table = $this->parseTable($matches);
@@ -385,9 +384,9 @@ class MigrationSquasher
         $table = $matches[1][0];
         $column = $matches[2][0];
         $type = $this->convertMySqlTypeToLaravelType(strtolower($matches[3][0]));
-        $params = $matches[4][0];
+        $params = $matches[5][0];
 
-        $attributes = strtolower($matches[5][0]);
+        $attributes = strtolower($matches[6][0]);
 
         if ($this->tables[$table]->hasColumn($column)) {
             if (str_contains($attributes, 'auto_increment')) {
