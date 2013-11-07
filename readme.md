@@ -1,4 +1,6 @@
-Aggregate your incremental Laravel migration files into single migration for each table. This eliminates all alter columns and makes testing via sqlite a possibility.
+Aggregate your incremental Laravel migration files into single migration for each table. This can be beneficial when needing to compress large migration sets into a single migration for each table. 
+
+This package also eliminates all alter columns since all migartions are aggregated into a single file making testing via sqlite a possibility.
 
 [![Build Status](https://travis-ci.org/Cytracom/laravel-migration-squasher.png)](https://travis-ci.org/Cytracom/laravel-migration-squasher)
 
@@ -14,7 +16,7 @@ Then, add the service provider to your app/config/app.php
 
 Commandline usage:
 ```
- migrate:squash [-p|--path[="..."]] [-o|--output[="..."]] [-mv|--move-to[="..."]]                                                      
+php artisan migrate:squash [-p|--path[="..."]] [-o|--output[="..."]] [-mv|--move-to[="..."]]                                                      
                                                                                                                                   
 Options:                                                                                                                 
  --path (-p)           The path to the migrations folder (default: "app/database/migrations")                             
