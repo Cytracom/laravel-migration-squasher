@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class SquashedTestTable extends Migration
+class SquashedRenamedTable extends Migration
 {
 
     /**
@@ -13,7 +13,7 @@ class SquashedTestTable extends Migration
      */
     public function up()
     {
-        Schema::create("test", function (Blueprint $table) {
+        Schema::create("renamed", function (Blueprint $table) {
             $table->string('test', 255)->nullable();
             $table->string('size', 2);
             $table->integer('int');

@@ -53,5 +53,6 @@ class UnsquashedTestSquash extends Migration
             DB::update('ALTER TABLE `test` MODIFY COLUMN `test` string(255);');
             DB::update('ALTER TABLE `test` MODIFY COLUMN `dte` datetime NULL AUTO_INCREMENT;');
         });
+        Schema::rename('test','renamed');
     }
 }

@@ -137,12 +137,19 @@ class MigrationSquasher
             }
             if ($this->lineContainsDbStatement($line) &&
                 preg_match_all('/ALTER TABLE *`?([^` ]*)`? *(?>MODIFY|CHANGE) *COLUMN `?([^ `]*)`? *([^;( ]*)(\(([^)]*))?\)? *([^\';]*)/i',
-                    $line, $matches)
+                    $line, $matches1)
             ) {
-                $this->createColumnFromDbStatement($matches);
+                $this->createColumnFromDbStatement($matches1);
+            }elseif(preg_match_all('/Schema::rename\((\'|")([^\'"]*)[^,]*,(\'|")([^\'"]*)/', $line, $matches3)){
+                $name = $matches3[2][0];
+                $newName = $matches3[4][0];
+                $this->tables[$newName] = $this->tables[$name];
+                $this->tables[$newName]->name = $newName;
+                unset($this->tables[$name]);
+                $table = $this->tables[$newName];
             }
-            elseif (preg_match('/Schema::(d|c|t|[^(]*\((\'|")(.*)(\'|"))*/', $line, $matches)) {
-                $table = $this->parseTable($matches);
+            elseif (preg_match('/Schema::(d|c|t|[^(]*\((\'|")(.*)(\'|"))*/', $line, $matches2)) {
+                $table = $this->parseTable($matches2);
                 $migration = true;
             }
             elseif ($table !== null) {

@@ -28,7 +28,7 @@ class MigrationSquasherTest extends \PHPUnit_Framework_TestCase
         $squash->squash();
 
         $date = date('Y_m_d');
-        $file = preg_replace('/\n| /','',file_get_contents(__DIR__ . '/data/output/'.$date.'_000000_squashed_test_table.php'));
+        $file = preg_replace('/\n| /','',file_get_contents(__DIR__ . '/data/output/'.$date.'_000000_squashed_renamed_table.php'));
         $exp = preg_replace('/\n| /','',file_get_contents(__DIR__ . '/data/output/Expected.php'));
         $this->assertEquals($file, $exp);
     }
