@@ -139,7 +139,6 @@ class MigrationSquasher
                 preg_match_all('/ALTER TABLE *`?([^` ]*)`? *(?>MODIFY|CHANGE) *COLUMN `?([^ `]*)`? *([^;( ]*)(\(([^)]*))?\)? *([^\';]*)/i',
                     $line, $matches)
             ) {
-                echo "\n\n".json_encode($matches)."\n\n";
                 $this->createColumnFromDbStatement($matches);
             }
             elseif (preg_match('/Schema::(d|c|t|[^(]*\((\'|")(.*)(\'|"))*/', $line, $matches)) {
