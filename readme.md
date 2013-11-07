@@ -50,7 +50,7 @@ Schema::create('my_table', function (Blueprint $table) {
 ```
 This also works for dropping and modifying schemas.  For a more detailed view on what it can handle, look at the sample test data in src/tests/data/MigrationTestData.php
 
-The table squasher will NOT hanlde things like
+The table squasher will NOT handle things like
 ```php
 $myStringColumns = ["col1","col2","col3"];
 foreach($myStringColumns as $column){
