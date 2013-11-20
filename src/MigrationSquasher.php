@@ -113,6 +113,11 @@ class MigrationSquasher
      */
     protected function parseFile($filePath)
     {
+        $file = file_get_contents($this->migrationPath . $filePath);
+        $file = str_replace("\n","",$file);
+        $file = str_replace("{","{\n", $file);
+        $file = str_replace(";",";\n", $file);
+        $file = str_replace("}","}\n", $file);
         $fileLines = explode(PHP_EOL, file_get_contents($this->migrationPath . $filePath));
         return $this->parseLines($fileLines);
     }
