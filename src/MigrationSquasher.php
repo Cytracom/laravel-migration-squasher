@@ -262,6 +262,7 @@ class MigrationSquasher
             case 'tinyInteger' :
             case 'unsignedBigInteger' :
             case 'unsignedInteger' :
+            case 'enum' :
                 $table->addColumn($this->createStandardColumn($matches, $segments, $line));
                 break;
         }
@@ -273,6 +274,7 @@ class MigrationSquasher
      *
      * @param $matches
      * @param $segments
+     * @param $line
      * @return \Cytracom\Squasher\Database\Column
      */
     protected function createStandardColumn($matches, $segments, $line)
@@ -296,10 +298,13 @@ class MigrationSquasher
                 $col->default = $default[1][0];
             }
         }
-        if (isset($segments[2])) {
+        array_shift($segments);
+        array_shift($segments);
+        $segments = implode("'",$segments);
+        if (isset($segments)) {
             $col->parameters =
-                preg_match('/,( *)[\dtrue]*/', $segments[2], $lineSize) ?
-                    preg_replace('/[^\dtrue]*/', '', $lineSize[0]) :
+                preg_match('/, *.*?\)(-|;)/', $segments, $lineSize) ?
+                    trim(substr(preg_replace('/\)(-|;)/', '', $lineSize[0], 1),1),' ') :
                     null;
         }
         return $col;

@@ -45,6 +45,9 @@ class UnsquashedTestSquash extends Migration
             $table->mediumInteger('medint');
             $table->longText('longText');
             $table->dropColumn("to_be_dropped");
+            $table->enum('testEnum1', ['val1','val2','val3']);
+            $table->enum('testEnum2', array('val1','val2','val3'));
+
 
             DB::update('ALTER TABLE `test` MODIFY COLUMN `longText` int(11);');
             DB::update('ALTER TABLE test MODIFY COLUMN `bin` BLOB(5000);');

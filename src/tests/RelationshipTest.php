@@ -21,4 +21,11 @@ class RelationshipTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('id', $rel->relationshipColumn);
         $this->assertEquals('person', $rel->relationshipTable);
     }
-} 
+}
+
+
+
+
+
+
+

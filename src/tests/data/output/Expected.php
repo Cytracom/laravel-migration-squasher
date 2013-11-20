@@ -34,6 +34,8 @@ class SquashedRenamedTable extends Migration
             $table->mediumText('medtext');
             $table->mediumInteger('medint');
             $table->integer('longText')->nullable();
+            $table->enum('testEnum1', ['val1','val2','val3']);
+            $table->enum('testEnum2', array('val1','val2','val3'));
             $table->nullableTimestamps();
             $table->softDeletes();
             $table->engine = 'TestEngine';
