@@ -71,12 +71,15 @@ Here is how you can use this for your tests
 While setting up the test case, we run
 
 ```php
-    $squash = new \Cytracom\Squasher\MigrationSquasher("app/database/migrations", "app/tests/migrations");
-    $squash->squash();
-    \Artisan::call('migrate', ['--path' => 'app/tests/migrations']);
-```
-Then, on tear down we do
-```php
+recursiveDelete(base_path('app/tests/migrations'));
+$squash = new \Cytracom\Squasher\MigrationSquasher("app/database/migrations", "app/tests/migrations");
+$squash->squash();
+\Artisan::call('migrate', ['--path' => 'app/tests/migrations']);
+
+$squash = new \Cytracom\Squasher\MigrationSquasher("app/database/migrations", "app/tests/migrations");
+$squash->squash();
+\Artisan::call('migrate', ['--path' => 'app/tests/migrations']);
+
 recursiveDelete(base_path('app/tests/migrations'));
     
 /**
@@ -98,4 +101,6 @@ function recursiveDelete($str){
     }
 }
 ```
+We delete all of the migrations before squashing again, to get rid of old squashed migrations that may be there.
+
 Again, please raise an issue if you find one, and feel free to make pull requests for review!  Our goal is to make testing with sqlite much more of a possibility, to enable fast testing.  Help from the community is always appreciated.
