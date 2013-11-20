@@ -12,6 +12,8 @@ Then, add the service provider to your app/config/app.php to enable artisan func
 ```
 'Cytracom\Squasher\SquasherServiceProvider'
 ```
+NOTE: this is not required if you do not with to have the commandline interface.  If you want to use the squasher just for testing, then you can ignore this service provider, and call the squasher directly.  This way, the squasher can be in your require-dev and not be a part of your production stack.
+
 
 
 Commandline usage:
