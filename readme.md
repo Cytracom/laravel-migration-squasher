@@ -45,6 +45,8 @@ Schema::create('my_table', function (Blueprint $table) {
     $table->integer("my_int",10)->unsigned()->unique();
     $table->increments("id");
     $table->string("test",255);
+    $table->myEnum("oldArrayInit", array("val1","val2"));
+    $table->myEnum("newArrayInit", ["val1","val2"]);
 
     DB::update('ALTER TABLE `my_table` MODIFY COLUMN `test` blob(500);');
     //etc;
