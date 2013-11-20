@@ -8,7 +8,7 @@ To install simply require
 ```
 "cytracom/squasher": "dev-master"
 ```
-Then, add the service provider to your app/config/app.php
+Then, add the service provider to your app/config/app.php to enable artisan functionality:
 ```
 'Cytracom\Squasher\SquasherServiceProvider'
 ```
