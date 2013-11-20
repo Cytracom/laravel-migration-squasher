@@ -65,4 +65,37 @@ foreach($myStringColumns as $column){
 ```
 And it never ever will.  Migrations shouldn't be written this way, and writing a php parser in php is no small task.
 
+
+Here is how you can use this for your tests
+
+While setting up the test case, we run
+
+```php
+    $squash = new \Cytracom\Squasher\MigrationSquasher("app/database/migrations", "app/tests/migrations");
+    $squash->squash();
+    \Artisan::call('migrate', ['--path' => 'app/tests/migrations']);
+```
+Then, on tear down we do
+```php
+    recursiveDelete(base_path('app/tests/migrations'));
+    
+/**
+ * Delete a file or recursively delete a directory
+ *
+ * @param string $str Path to file or directory
+ * @return bool
+ */
+function recursiveDelete($str){
+    if(is_file($str)){
+        return @unlink($str);
+    }
+    elseif(is_dir($str)){
+        $scan = glob(rtrim($str,'/').'/*');
+        foreach($scan as $index=>$path){
+            recursiveDelete($path);
+        }
+        return @rmdir($str);
+    }
+}
+```
 Again, please raise an issue if you find one, and feel free to make pull requests for review!  Our goal is to make testing with sqlite much more of a possibility, to enable fast testing.  Help from the community is always appreciated.
