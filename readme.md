@@ -77,7 +77,7 @@ While setting up the test case, we run
 ```
 Then, on tear down we do
 ```php
-    recursiveDelete(base_path('app/tests/migrations'));
+recursiveDelete(base_path('app/tests/migrations'));
     
 /**
  * Delete a file or recursively delete a directory
