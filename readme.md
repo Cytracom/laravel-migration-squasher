@@ -76,12 +76,6 @@ $squash = new \Cytracom\Squasher\MigrationSquasher("app/database/migrations", "a
 $squash->squash();
 \Artisan::call('migrate', ['--path' => 'app/tests/migrations']);
 
-$squash = new \Cytracom\Squasher\MigrationSquasher("app/database/migrations", "app/tests/migrations");
-$squash->squash();
-\Artisan::call('migrate', ['--path' => 'app/tests/migrations']);
-
-recursiveDelete(base_path('app/tests/migrations'));
-    
 /**
  * Delete a file or recursively delete a directory
  *
