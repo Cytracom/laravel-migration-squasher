@@ -9,4 +9,4 @@ php:
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
-  - composer install --dev
+  - composer install --dev --prefer-source
